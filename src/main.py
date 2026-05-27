@@ -1,16 +1,26 @@
-from textnode import TextNode, TextType
-# from htmlnode import HTMLNode
+import os
+import shutil
+
+from copystatic import copy_files_recursive
+from gencontent import generate_pages_recursive
 
 
-from htmlnode import ParentNode
+dir_path_static = "./static"
+dir_path_public = "./public"
+dir_path_content = "./content"
+template_path = "./template.html"
 
 
-def main():
-    text_node = TextNode("some text", TextType.TEXT, "dummy.url")
-    # html_node = HTMLNode("<a>", "clickable", None, {"href": "123.com", "target": "-blank"})
-    # print(text_node)
-    parent_node = ParentNode("div", [text_node])
-    print(parent_node.to_html())
+def main() -> None:
+    print("Deleting public directory...")
+    if os.path.exists(dir_path_public):
+        shutil.rmtree(dir_path_public)
+
+    print("Copying static files to public directory...")
+    copy_files_recursive(dir_path_static, dir_path_public)
+
+    print("Generating content...")
+    generate_pages_recursive(dir_path_content, template_path, dir_path_public)
 
 
 main()
